@@ -2170,6 +2170,14 @@ is much faster to use this function to retrieve the generator and then use RNG::
 */
 CV_EXPORTS RNG& theRNG();
 
+/** @brief Sets state of default random number generator.
+
+The function sets state of default random number generator to custom value.
+@param seed new state for default random number generator
+@sa RNG, randu, randn
+*/
+CV_EXPORTS_W void setRNGSeed(int seed);
+
 /** @brief Generates a single uniformly-distributed random number or an array of random numbers.
 
 Non-template variant of the function fills the matrix dst with uniformly-distributed
@@ -3059,6 +3067,9 @@ public:
     /** Returns the algorithm string identifier.
      This string is used as top level xml/yml node tag when the object is saved to a file or string. */
     CV_WRAP virtual String getDefaultName() const;
+
+protected:
+    void writeFormat(FileStorage& fs) const;
 };
 
 struct Param {
