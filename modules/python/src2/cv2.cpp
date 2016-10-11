@@ -3,7 +3,13 @@
 #define HAVE_ROUND 1
 #endif
 
+//caiqt modify start
+#ifdef _DEBUG
+#undef _DEBUG
 #include <Python.h>
+#define _DEBUG
+#endif
+//caiqt modify end. [2016/05/19 22:52:53] 
 
 #define MODULESTR "cv2"
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
@@ -398,6 +404,61 @@ static bool pyopencv_to(PyObject* o, Mat& m, const ArgInfo info)
 
     return true;
 }
+
+
+using namespace cv;
+template<>
+bool pyopencv_to(PyObject *obj, cvtool_void_ptr& dst, const char *name)
+{
+	(void)name;
+	if (!obj)
+		return true;
+	dst = PyCapsule_GetPointer(obj, NULL);
+	return true;
+}
+
+template<>
+PyObject* pyopencv_from(const cvtool_void_ptr& src)
+{
+	if (src == NULL) return NULL;
+	return PyCapsule_New(src, NULL, NULL);
+}
+
+template<>
+bool pyopencv_to(PyObject *obj, KEYBOARD_CALLBACK& dst, const char *name)
+{
+	(void)name;
+	if (!obj)
+		return true;
+	dst = (KEYBOARD_CALLBACK) PyCapsule_GetPointer(obj, NULL);
+	return true;
+}
+
+template<>
+PyObject* pyopencv_from(const KEYBOARD_CALLBACK& src)
+{
+	if (src == NULL) return NULL;
+	return PyCapsule_New(src, NULL, NULL);
+}
+
+template<>
+bool pyopencv_to(PyObject *obj, MOUSE_CALLBACK& dst, const char *name)
+{
+	(void)name;
+	if (!obj)
+		return true;
+	dst = (MOUSE_CALLBACK)PyCapsule_GetPointer(obj, NULL);
+	return true;
+}
+
+template<>
+PyObject* pyopencv_from(const MOUSE_CALLBACK& src)
+{
+	if (src == NULL) return NULL;
+	return PyCapsule_New(src, NULL, NULL);
+}
+
+
 
 template<>
 bool pyopencv_to(PyObject* o, Mat& m, const char* name)
@@ -1062,6 +1123,8 @@ PyObject* pyopencv_from(const RotatedRect& src)
 {
     return Py_BuildValue("((ff)(ff)f)", src.center.x, src.center.y, src.size.width, src.size.height, src.angle);
 }
+
+
 
 template<>
 PyObject* pyopencv_from(const Moments& m)

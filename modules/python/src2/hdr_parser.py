@@ -743,8 +743,12 @@ class CppHeaderParser(object):
         """
         self.hname = hname
         decls = []
-        f = io.open(hname, 'rt', encoding='utf-8')
-        linelist = list(f.readlines())
+        try:
+        	f = io.open(hname, 'rt', encoding='utf-8')
+        	linelist = list(f.readlines())
+        except:
+        	f = io.open(hname, 'rt', encoding='gbk')
+        	linelist = list(f.readlines())
         f.close()
 
         # states:
