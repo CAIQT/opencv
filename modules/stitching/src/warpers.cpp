@@ -224,13 +224,21 @@ void PlaneWarper::detectResultRoi(Size src_size, Point &dst_tl, Point &dst_br)
 
 void SphericalWarper::detectResultRoi(Size src_size, Point &dst_tl, Point &dst_br)
 {
-    detectResultRoiByBorder(src_size, dst_tl, dst_br);
+	//caiqt add start: y near to 0
+	if (abs(projector_.rinv[4]) < 0.01f)
+	{
+		RotationWarperBase<SphericalProjector>::detectResultRoi(src_size, dst_tl, dst_br);
+		return;
+	}
+	//caiqt add end. [2016/11/03 16:29:34] 
+
+	detectResultRoiByBorder(src_size, dst_tl, dst_br);
 
     float tl_uf = static_cast<float>(dst_tl.x);
     float tl_vf = static_cast<float>(dst_tl.y);
     float br_uf = static_cast<float>(dst_br.x);
     float br_vf = static_cast<float>(dst_br.y);
-
+		
     float x = projector_.rinv[1];
     float y = projector_.rinv[4];
     float z = projector_.rinv[7];
