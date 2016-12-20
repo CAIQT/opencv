@@ -52,8 +52,19 @@ static const CvPoint icvCodeDeltas[8] =
 
 inline unsigned int trailingZeros(unsigned int value) {
 #if defined(_MSC_VER)
-#if (_MSC_VER < 1500)
-    return _BitScanForward(value);
+#if (_MSC_VER <= 1600)
+	//caiqt modify start
+    //return _BitScanForward(value);
+	unsigned long index;
+	if(_BitScanForward(&index, value))
+	{
+		return index;
+	}
+	else
+	{
+		return sizeof(value);
+	}
+	//caiqt modify end. [2016/12/01 13:54:28] 
 #else
     return _tzcnt_u32(value);
 #endif
